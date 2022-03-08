@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyah Free</title>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+        }
+        .view {
+            width: 100%;
+            height: 60vw;
+        }
+        .view iframe {
+            border: none;
+            outline: none;
+            width: 100%;
+            height: 100%;
+        }
+        .color-select {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .color-select .color {
+            padding: 2px 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="view">
+        <iframe src="http://localhost:8081/"></iframe>
+    </div>
+    <div class="loading-status"></div>
+    <div class="loading-progress"></div>
+    <div class="color-select">
+        <div class="color" onclick="changeColor('CC03')">玄英黑</div>
+        <div class="color" onclick="changeColor('CC01')">杜若白</div>
+        <div class="color" onclick="changeColor('CC04')">青云灰</div>
+        <div class="color" onclick="changeColor('CC05')">星海蓝</div>
+        <div class="color" onclick="changeColor1('CC06')">云清蓝</div>
+        <div class="color" onclick="changeColor1('CC02')">流光金</div>
+        <div class="color" onclick="changeColor1('CC07')">宝釉蓝</div>
+        <div class="color" onclick="changeColor1('CC08')">翡翠绿</div>
+    </div>
+    <div class="view-list">
+        <div class="v" onclick="changeView('wheel')">轮毂视角</div>
+        <div class="v" onclick="changeView('default')">默认视角</div>
+    </div>
+    <!-- <div class="wheel-list">
+        <div class="wheel"></div>
+        <div class="wheel"></div>
+    </div> -->
+    <script>
+        const carFrame = document.querySelector('iframe');
+        // carFrame.src = location.href.replace('iframe.html', 'index.html');
+
+        const loadingStatus = document.querySelector('.loading-status');
+        const loadingProgress = document.querySelector('.loading-progress');
+        let color = 'black';
+        let wheel = 'wheel1';
+
+        window.onmessage = (e) => {
+            if (e.data.type) {
+                console.log(e);
+                // modelStartLoading, loadingProgress, modelLoaded, modelRenderFirstFrame
+                loadingStatus.innerHTML = e.data.type;
+                if (e.data.type === 'loadingProgress') {
+                    loadingProgress.innerHTML = e.data.progress;
+                }
+            }
+        }
+
+        function changeColor(c) {
+            color = c;
+            carFrame.contentWindow.postMessage({
+                type: 'changeConfig',
+                color: c,
+                wheel,
+            }, '*');
+        }
+
+        function changeColor1(c) {
+            color = c
+            carFrame.contentWindow.changeConfig({
+                color: c,
+                wheel,
+            });
+        }
+
+        function changeWheel(w) {
+            wheel = w;
+        }
+
+        function changeView(view) {
+            carFrame.contentWindow.postMessage({
+                type: 'changeView',
+                view,
+            }, '*')
+        }
+    </script>
+</body>
+</html>
