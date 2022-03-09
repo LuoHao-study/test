@@ -66,11 +66,14 @@
 
         window.onmessage = (e) => {
             if (e.data.type) {
-                console.log(e);
+                // console.log(e);
                 // modelStartLoading, loadingProgress, modelLoaded, modelRenderFirstFrame
                 loadingStatus.innerHTML = e.data.type;
                 if (e.data.type === 'loadingProgress') {
                     loadingProgress.innerHTML = e.data.progress;
+                }
+                if (e.data.type === 'error') {
+                    console.log(e.data);
                 }
             }
         }
